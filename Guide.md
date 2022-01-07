@@ -1,4 +1,8 @@
 
+## 需要的软件
+
+WebStorm、nodejs
+
 ##如何运行代码
 ```bash
 npm install --registry=https://registry.npm.taobao.org
@@ -9,9 +13,10 @@ npm run dev
 
 ### 1.添加菜单
 
-菜单位于`src/router/index.js`中的`asyncRoutes`，菜单的位置和代码的位置是一致的，可以注释代码、修改代码，自行看看主页的变化
+菜单位于`src/router/index.js`中的`asyncRoutes`，菜单的位置和代码的位置是一致的
+如果代码靠前，那么显示的菜单也靠前
 
-更加直观地感受菜单的添加方法
+可以注释代码、修改代码，自行看看主页的变化，更加直观地感受菜单的添加方法
 
 ### 2.添加API
 

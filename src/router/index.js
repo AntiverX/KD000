@@ -132,6 +132,8 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
 
+
+  // 学期菜单
   {
     path: '/semester',
     component: Layout,
@@ -146,8 +148,8 @@ export const asyncRoutes = [
     children: [
       {
         path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        component: () => import('@/views/main/semester/index'),
+        name: 'SemesterInfo',
         meta: {
           title: '学期信息',
           roles: ['admin'] // or you can only set roles in sub nav
@@ -155,8 +157,8 @@ export const asyncRoutes = [
       },
       {
         path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'TeacherHistory',
+        component: () => import('@/views/main/semester/SemesterHistory'),
+        name: 'SemesterHistory',
         meta: {
           title: '历史学期信息',
           roles: ['admin']
@@ -165,6 +167,7 @@ export const asyncRoutes = [
     ]
   },
 
+  //班级菜单
   {
     path: '/class',
     component: Layout,
@@ -198,6 +201,7 @@ export const asyncRoutes = [
     ]
   },
 
+  // 教师菜单
   {
     path: '/teacher',
     component: Layout,
@@ -258,6 +262,7 @@ export const asyncRoutes = [
     ]
   },
 
+  // 学生菜单
   {
     path: '/student',
     component: Layout,
@@ -291,6 +296,7 @@ export const asyncRoutes = [
     ]
   },
 
+  // 排课菜单
   {
     path: '/SetSchedule',
     component: Layout,
@@ -333,6 +339,7 @@ export const asyncRoutes = [
     ]
   },
 
+  // 课表菜单
   {
     path: '/schedule',
     component: Layout,
@@ -375,6 +382,7 @@ export const asyncRoutes = [
     ]
   },
 
+  // 权限管理
   {
     path: '/permission',
     component: Layout,
