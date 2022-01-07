@@ -25,6 +25,8 @@
       </el-checkbox>
     </div>
 
+
+<!--    KD000 : 表格相关代码-->
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -99,8 +101,15 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
+
+<!--    KD000 : 添加、修改信息用的弹框-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+
+        <el-form-item label="姓名" prop="title">
+          <el-input v-model="temp.title" />
+        </el-form-item>
+
         <el-form-item label="Type" prop="type">
           <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
             <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
@@ -109,9 +118,11 @@
         <el-form-item label="Date" prop="timestamp">
           <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
         </el-form-item>
+
         <el-form-item label="Title" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
+
         <el-form-item label="Status">
           <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
@@ -134,6 +145,7 @@
       </div>
     </el-dialog>
 
+<!--    KD000 : 当输入数据不合法时的输入框-->
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
