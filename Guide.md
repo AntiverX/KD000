@@ -56,13 +56,17 @@ const semester = require('./semester')
 
 ### 3.添加页面
 
-页面位于`src/views/main`
+我们关注的页面位于`src/views/main`， `src/views`文件夹中的其他文件是这套后台系统自带的模板，主要参考`src/views/main/semester/index.vue`
 
-`src/views`文件夹中的其他文件是这套后台系统自带的模板
+如果这个文明不能满足需求，可参考`src/views/table/complex-table.vue`，我也保留了网页中的`Table`菜单，可以看看里面有哪些功能是自己需要的，然后copy
 
-对于有输入框的页面，可参考`src/views/table/complex-table.vue`
+表格展示部分着重关注下面的代码块
 
-表格展示部分着重关注下面的代码块，`label`为显示的标签名，`<span>{{ row.id }}</span>`决定了怎么从一条记录里取数据，`prop`定义了逻辑代码将这个输入框看做哪个字段
+`label`为显示的标签名
+
+`<span>{{ row.id }}</span>`决定了怎么从一条记录里取数据
+
+`prop`定义了逻辑代码将这个输入框看做哪个字段
 
 ```angular2html
 <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
