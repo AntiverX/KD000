@@ -73,3 +73,8 @@ const semester = require('./semester')
 KD000 : start for 输入框代码
 KD000 : end for 输入框代码
 ```
+
+
+# 提效工具
+
+`ctrl shift A`万能工具条，选择`Files`即可进行文件搜索，例如我要找Teacher里的index在哪里，直接输入`teach index`即可，能够帮你快速找到需要修改的文件
