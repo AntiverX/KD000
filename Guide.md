@@ -4,6 +4,9 @@
 WebStorm、nodejs
 
 ##如何运行代码
+
+在IDE下方的`Terminal`里运行下面的代码
+
 ```bash
 npm install --registry=https://registry.npm.taobao.org
 npm run dev
