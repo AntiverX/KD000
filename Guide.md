@@ -26,7 +26,9 @@ npm run dev
 
 API位于`src/api`文件夹中，可以参考`src/api/semester.js`的写法，里面有基本增删改查的模板
 
-这个后端为了调试方便使用了`mock.js`，`mock.js`会模拟出一个后端。这个文件同样需要添加，这样可以直接在本地调试。可以参考`mock/semester.js`的写法
+这个后端为了调试方便使用了`mock.js`，`mock.js`会模拟出一个后端。`mock`文件夹下面的各个js文件对应着各个页面的功能
+
+这里同样需要添加一些代码，以便直接在本地调试。可以参考`mock/semester.js`的写法
 
 添加完虚拟API后，需要修改`mock/index.js`的定义，添加相关定义，例如我添加完semester后，`mock/index.js`开头的定义更改为
 
