@@ -1,40 +1,40 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function getSemesterList(query) {
   return request({
-    url: '/vue-element-admin/article/list',
+    url: '/api/semester/get',
     method: 'get',
     params: query
   })
 }
 
-export function fetchArticle(id) {
+export function getSemester(id) {
   return request({
-    url: '/vue-element-admin/article/detail',
+    url: '/api/semester/detail',
     method: 'get',
     params: { id }
   })
 }
 
-export function fetchPv(pv) {
+export function deleteSemester(id) {
   return request({
-    url: '/vue-element-admin/article/pv',
+    url: '/api/semester/delete',
     method: 'get',
-    params: { pv }
+    params: { id }
   })
 }
 
-export function createArticle(data) {
+export function createSemester(data) {
   return request({
-    url: '/vue-element-admin/article/create',
+    url: '/api/semester/create',
     method: 'post',
     data
   })
 }
 
-export function updateArticle(data) {
+export function updateSemester(data) {
   return request({
-    url: '/vue-element-admin/article/update',
+    url: '/api/semester/update',
     method: 'post',
     data
   })

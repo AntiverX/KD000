@@ -18,12 +18,36 @@ npm run dev
 
 可以注释代码、修改代码，自行看看主页的变化，更加直观地感受菜单的添加方法
 
+
 ### 2.添加API
 
-API位于`src/api`
+API位于`src/api`文件夹中，可以参考`src/api/semester.js`的写法，里面有基本增删改查的模板
 
-这个后端为了调试方便使用了`mock.js`，`mock.js`会模拟出一个后端。这里我们也使用相同的方法
-文件的具体写法可以对比`mock/article.js`和`src/api/article.js`
+这个后端为了调试方便使用了`mock.js`，`mock.js`会模拟出一个后端。这个文件同样需要添加，这样可以直接在本地调试。可以参考`mock/semester.js`的写法
+
+添加完虚拟API后，需要修改`mock/index.js`的定义，添加相关定义，例如我添加完semester后，`mock/index.js`开头的定义更改为
+
+```js
+const user = require('./user')
+const role = require('./role')
+const article = require('./article')
+const search = require('./remote-search')
+const semester = require('./semester')
+
+const mocks = [
+  ...user,
+  ...role,
+  ...article,
+  ...search,
+  ...semester,
+]
+```
+
+增加了两行
+```js
+const semester = require('./semester')
+...semester,
+```
 
 ### 3.添加页面
 
@@ -33,3 +57,19 @@ API位于`src/api`
 
 对于有输入框的页面，可参考`src/views/table/complex-table.vue`
 
+表格展示部分着重关注下面的代码块，`label`为显示的标签名，`<span>{{ row.id }}</span>`决定了怎么从一条记录里取数据，`prop`定义了逻辑代码将这个输入框看做哪个字段
+
+```angular2html
+<el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+  <template slot-scope="{row}">
+    <span>{{ row.id }}</span>
+  </template>
+</el-table-column>
+```
+
+所有需要修改的部分都添加了如下的注释，在这一页搜`KD000`即可找到需要修改的部分
+
+```angular2html
+KD000 : start for 输入框代码
+KD000 : end for 输入框代码
+```

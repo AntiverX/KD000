@@ -132,14 +132,13 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
 
-
   // 学期菜单
   {
     path: '/semester',
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Teacher',
+    name: 'Semester',
     meta: {
       title: '学期信息',
       icon: 'education',
@@ -154,26 +153,27 @@ export const asyncRoutes = [
           title: '学期信息',
           roles: ['admin'] // or you can only set roles in sub nav
         }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/main/semester/SemesterHistory'),
-        name: 'SemesterHistory',
-        meta: {
-          title: '历史学期信息',
-          roles: ['admin']
-        }
-      },
+      }
+
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/main/semester/SemesterHistory'),
+      //   name: 'SemesterHistory',
+      //   meta: {
+      //     title: '历史学期信息',
+      //     roles: ['admin']
+      //   }
+      // },
     ]
   },
 
-  //班级菜单
+  // 班级菜单
   {
     path: '/class',
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Teacher',
+    name: 'Class',
     meta: {
       title: '班级信息',
       icon: 'education',
@@ -182,22 +182,24 @@ export const asyncRoutes = [
     children: [
       {
         path: 'page',
-        component: () => import('@/views/permission/page'),
+        component: () => import('@/views/main/class/index'),
         name: 'PagePermission',
         meta: {
           title: '班级信息',
           roles: ['admin'] // or you can only set roles in sub nav
         }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'TeacherHistory',
-        meta: {
-          title: '历史班级信息',
-          roles: ['admin']
-        }
-      },
+      }
+
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/permission/role'),
+      //   name: 'TeacherHistory',
+      //   meta: {
+      //     title: '历史班级信息',
+      //     roles: ['admin']
+      //   }
+      // },
+
     ]
   },
 
@@ -215,18 +217,18 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'index',
+        component: () => import('@/views/main/teacher/index'),
+        name: 'TeacherInfo',
         meta: {
           title: '教师信息',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'TeachPreference',
+        component: () => import('@/views/main/teacher/teacher-preference'),
+        name: 'TeachPreference',
         meta: {
           title: '教学偏好',
           roles: ['admin'] // or you can only set roles in sub nav
@@ -240,25 +242,28 @@ export const asyncRoutes = [
           title: '教学课程'
           // if do not set roles, means: this page does not require permission
         }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'TeacherHistory',
-        meta: {
-          title: '历史教师信息',
-          roles: ['admin']
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'course_history',
-        meta: {
-          title: '历史教学课程',
-          roles: ['admin']
-        }
       }
+
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/permission/role'),
+      //   name: 'TeacherHistory',
+      //   meta: {
+      //     title: '历史教师信息',
+      //     roles: ['admin']
+      //   }
+      // },
+      //
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/permission/role'),
+      //   name: 'course_history',
+      //   meta: {
+      //     title: '历史教学课程',
+      //     roles: ['admin']
+      //   }
+      // }
+
     ]
   },
 
@@ -268,7 +273,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Teacher',
+    name: 'Student',
     meta: {
       title: '学生信息',
       icon: 'people',
@@ -292,7 +297,7 @@ export const asyncRoutes = [
           title: '历史学生信息',
           roles: ['admin']
         }
-      },
+      }
     ]
   },
 
@@ -302,7 +307,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Teacher',
+    name: 'Course',
     meta: {
       title: '课程安排',
       icon: 'peoples',
@@ -314,17 +319,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/page'),
         name: 'PagePermission',
         meta: {
-          title: '课程模板',
+          title: '排课模板',
           roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: '班级课程'
-          // if do not set roles, means: this page does not require permission
         }
       },
       {
@@ -336,6 +332,15 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
         }
       },
+      {
+        path: 'directive',
+        component: () => import('@/views/permission/directive'),
+        name: 'DirectivePermission',
+        meta: {
+          title: '历史排课模板'
+          // if do not set roles, means: this page does not require permission
+        }
+      }
     ]
   },
 
@@ -345,7 +350,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/permission/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Teacher',
+    name: 'Scheduler',
     meta: {
       title: '课表查询',
       icon: 'list',
@@ -378,7 +383,7 @@ export const asyncRoutes = [
           title: '班级课表',
           roles: ['admin']
         }
-      },
+      }
     ]
   },
 
@@ -403,7 +408,7 @@ export const asyncRoutes = [
           title: '页面权限',
           roles: ['admin'] // or you can only set roles in sub nav
         }
-      },
+      }
     ]
   },
 
