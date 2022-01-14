@@ -43,15 +43,93 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="学期名称" align="center">
+      <el-table-column label="班级名称" align="center">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Date" align="center">
+      <el-table-column label="分科" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.status }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="班主任" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.master }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="语文老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_chinese }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="数学老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_math }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="英语老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_english }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="物理老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_physics }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="化学老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_chemistry }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="生物老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_biology }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="政治老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_politics }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="历史老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_history }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="地理老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_geography }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="音乐老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_music }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="体育老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_PE }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="美术老师" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_of_art }}</span>
         </template>
       </el-table-column>
 
@@ -73,18 +151,71 @@
 
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getCurrentSemester" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getCurrentClazz" />
 
     <!-- KD000 : start for 输入框代码 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
-        <el-form-item label="学期名称" prop="name">
+        <el-form-item label="班级名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item label="分科" prop="status">
+          <el-radio v-model="temp.status" :label="1">文科</el-radio>
+          <el-radio v-model="temp.status" :label="0">理科</el-radio>
+        </el-form-item>
+
+        <el-form-item label="班主任" prop="comment">
+          <el-input v-model="temp.master" />
+        </el-form-item>
+
+        <el-form-item label="语文老师" prop="comment">
+          <el-input v-model="temp.teacher_of_chinese" />
+        </el-form-item>
+
+        <el-form-item label="数学老师" prop="comment">
+          <el-input v-model="temp.teacher_of_math" />
+        </el-form-item>
+
+        <el-form-item label="英语老师" prop="comment">
+          <el-input v-model="temp.teacher_of_english" />
+        </el-form-item>
+
+        <el-form-item label="物理老师" prop="comment">
+          <el-input v-model="temp.teacher_of_physics" />
+        </el-form-item>
+
+        <el-form-item label="化学老师" prop="comment">
+          <el-input v-model="temp.teacher_of_chemistry" />
+        </el-form-item>
+
+        <el-form-item label="生物老师" prop="comment">
+          <el-input v-model="temp.teacher_of_biology" />
+        </el-form-item>
+
+        <el-form-item label="政治老师" prop="comment">
+          <el-input v-model="temp.teacher_of_politics" />
+        </el-form-item>
+
+        <el-form-item label="历史老师" prop="comment">
+          <el-input v-model="temp.teacher_of_history" />
+        </el-form-item>
+
+        <el-form-item label="地理老师" prop="comment">
+          <el-input v-model="temp.teacher_of_geography" />
+        </el-form-item>
+
+        <el-form-item label="音乐老师" prop="comment">
+          <el-input v-model="temp.teacher_of_music" />
+        </el-form-item>
+
+        <el-form-item label="体育老师" prop="comment">
+          <el-input v-model="temp.teacher_of_PE" />
+        </el-form-item>
+
+        <el-form-item label="美术老师" prop="comment">
+          <el-input v-model="temp.teacher_of_art" />
         </el-form-item>
 
         <el-form-item label="备注" prop="comment">
@@ -120,7 +251,7 @@
 <script>
 
 // KD000 : start for 定义API
-import { getSemesterList, getSemester, deleteSemester, createSemester, updateSemester } from '@/api/semester'
+import { getClazzList, getClazz, deleteClazz, createClazz, updateClazz } from '@/api/clazz'
 // KD000 : end for 定义API
 
 import waves from '@/directive/waves' // waves directive
@@ -202,14 +333,14 @@ export default {
     }
   },
   created() {
-    this.getCurrentSemester()
+    this.getCurrentClazz()
   },
   methods: {
 
     // KD000 : start for 使用API
-    getCurrentSemester() {
+    getCurrentClazz() {
       this.listLoading = true
-      getSemesterList(this.listQuery).then(response => {
+      getClazzList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 
@@ -225,7 +356,7 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           this.temp.author = 'vue-element-admin'
-          createSemester(this.temp).then(() => {
+          createClazz(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
@@ -244,7 +375,7 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateSemester(tempData).then(() => {
+          updateClazz(tempData).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -260,7 +391,7 @@ export default {
     },
 
     handleDelete(row, index) {
-      deleteSemester(row.id).then(() => {
+      deleteClazz(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',
@@ -294,7 +425,7 @@ export default {
 
     handleFilter() {
       this.listQuery.page = 1
-      this.getCurrentSemester()
+      this.getCurrentClazz()
     },
     handleModifyStatus(row, status) {
       this.$message({
