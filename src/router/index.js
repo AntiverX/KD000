@@ -235,12 +235,12 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
+        path: 'courses',
+        component: () => import('@/views/main/course/index'),
+        name: 'Courses',
         meta: {
-          title: '教学课程'
-          // if do not set roles, means: this page does not require permission
+          title: '教学课程',
+          roles: ['admin']
         }
       }
 

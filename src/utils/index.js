@@ -8,6 +8,20 @@
  * @param {string} cFormat
  * @returns {string | null}
  */
+
+export function myParseTime(time) {
+  const javaScriptRelease = Date.parse(time)
+  var date = new Date(javaScriptRelease)
+  var year = date.getFullYear()
+  var month = date.getMonth() + 1
+  var day = date.getDate()
+  var hours = date.getHours()
+  var minutes = '0' + date.getMinutes()
+  var seconds = '0' + date.getSeconds()
+  var formattedTime = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)
+  return formattedTime
+}
+
 export function parseTime(time, cFormat) {
   if (arguments.length === 0 || !time) {
     return null
