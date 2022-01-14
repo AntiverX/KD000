@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function getSemesterList(query) {
   return request({
     url: '/api/semester/get',
-    method: 'get',
+    method: 'post',
     params: query
   })
 }

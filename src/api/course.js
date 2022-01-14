@@ -8,6 +8,21 @@ export function getCourseList(query) {
   })
 }
 
+export function createCourse(data) {
+  return request({
+    url: '/api/courses/',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteCourse(id) {
+  return request({
+    url: '/api/courses/' + id + '/',
+    method: 'delete'
+  })
+}
+
 export function getCourse(id) {
   return request({
     url: '/api/courses/detail',
@@ -15,23 +30,6 @@ export function getCourse(id) {
     params: { id }
   })
 }
-
-export function deleteCourse(id) {
-  return request({
-    url: '/api/courses/delete',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function createCourse(data) {
-  return request({
-    url: '/api/courses/create',
-    method: 'post',
-    data
-  })
-}
-
 export function updateCourse(data) {
   return request({
     url: '/api/courses/update',

@@ -47,7 +47,7 @@ module.exports = {
            */
           '^/dev-api/api': '/api'
         }
-      },
+      }
     }
   },
   configureWebpack: {
