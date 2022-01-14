@@ -83,6 +83,11 @@ KD000 : start for 输入框代码
 KD000 : end for 输入框代码
 ```
 
+# 如何上传修改的代码
+
+首先更新自己的项目到最新 `工具栏 -> Git -> update project -> rebase project `
+
+然后右键`KD000`文件夹 `git -> commit directory -> commit and push`
 
 # 提效工具
 

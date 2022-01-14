@@ -13,7 +13,7 @@ for (let i = 0; i < count; i++) {
     id: '@increment',
     name: '2021学年第二学期',
     timestamp: +Mock.Random.date('T'),
-    comment: 'fuck',
+    comment: 'KD000',
   }))
 }
 

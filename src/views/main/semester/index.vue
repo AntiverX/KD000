@@ -93,6 +93,7 @@
 
       </el-form>
 
+      <!-- 最下方的取消和确认按钮 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           Cancel
@@ -119,9 +120,9 @@
 
 <script>
 
-// KD000 : start for 定义API
+// KD000 : start for 导入API
 import { getSemesterList, getSemester, deleteSemester, createSemester, updateSemester } from '@/api/semester'
-// KD000 : end for 定义API
+// KD000 : end for 导入API
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -202,7 +203,9 @@ export default {
     }
   },
   created() {
+    // KD000 : start for 初始化操作
     this.getCurrentSemester()
+    // KD000 : end for 初始化操作
   },
   methods: {
 
