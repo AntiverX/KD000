@@ -183,7 +183,7 @@ export const asyncRoutes = [
       {
         path: 'page',
         component: () => import('@/views/main/class/index'),
-        name: 'PagePermission',
+        name: 'ClassInfo',
         meta: {
           title: '班级信息',
           roles: ['admin'] // or you can only set roles in sub nav
@@ -283,7 +283,7 @@ export const asyncRoutes = [
       {
         path: 'page',
         component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        name: 'StudentInfo',
         meta: {
           title: '学生信息',
           roles: ['admin'] // or you can only set roles in sub nav
@@ -315,15 +315,6 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
-        meta: {
-          title: '排课模板',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
         path: 'directive',
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
@@ -332,15 +323,6 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
         }
       },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: '历史排课模板'
-          // if do not set roles, means: this page does not require permission
-        }
-      }
     ]
   },
 
@@ -360,27 +342,37 @@ export const asyncRoutes = [
       {
         path: 'page',
         component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        name: 'TotalScheduler',
         meta: {
           title: '总课表',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'role',
+        path: 'gradeScheduler',
         component: () => import('@/views/permission/role'),
-        name: 'TeacherHistory',
+        name: 'GradeScheduler',
         meta: {
           title: '年级课表',
           roles: ['admin']
         }
       },
       {
-        path: 'role',
+        path: 'classScheduler',
         component: () => import('@/views/permission/role'),
-        name: 'TeacherHistory',
+        name: 'ClassScheduler',
         meta: {
           title: '班级课表',
+          roles: ['admin']
+        }
+      },
+
+      {
+        path: 'drag',
+        component: () => import('@/views/components-demo/drag-select'),
+        name: 'Drag',
+        meta: {
+          title: 'drag',
           roles: ['admin']
         }
       }
