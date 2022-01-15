@@ -30,9 +30,8 @@
       v-loading="listLoading"
       :data="list"
       border
-      fit
       highlight-current-row
-      style="width: 100%;"
+
       @sort-change="sortChange"
     >
 
@@ -43,26 +42,35 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="学期名称" align="center">
+      <el-table-column label="学期名称" align="center" width="100px">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Date" align="center">
+      <el-table-column label="Date" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.created | myParseTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Comment" align="center">
+      <el-table-column v-if="showReviewer" label="Comment" align="center">
+        <template slot-scope="{row}">
+          <el-tag v-for="item of value" :key="item" style="margin-right:15px;">
+            {{ item }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="备注" align="center">
         <template slot-scope="{row}">
           <span>{{ row.desc }}</span>
         </template>
       </el-table-column>
+
       <!-- KD000 : end for 表格代码 -->
 
-      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width" width="150px">
 
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
@@ -161,6 +169,7 @@ export default {
   },
   data() {
     return {
+      value: ['格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元','格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元','格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元'],
       tableKey: 0,
       list: null,
       total: 0,
