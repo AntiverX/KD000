@@ -348,17 +348,8 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'TotalScheduler',
-        meta: {
-          title: '总课表',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
         path: 'gradeScheduler',
-        component: () => import('@/views/permission/role'),
+        component: () => import('@/views/main/scheduler/GradeScheduler'),
         name: 'GradeScheduler',
         meta: {
           title: '年级课表',
