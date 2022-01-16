@@ -1,5 +1,5 @@
 <template>
-  <el-select ref="dragSelect" v-model="selectVal" v-bind="$attrs" class="drag-select" multiple v-on="$listeners" @change="onChange">
+  <el-select ref="dragSelect" v-model="selectVal" v-bind="$attrs" class="drag-select" v-on="$listeners" @change="onChange">
     <slot />
   </el-select>
 </template>
@@ -18,7 +18,12 @@ export default {
   computed: {
     selectVal: {
       get() {
+        // var content = []
+        // for (let i = 0 ; i < this.value.length; i++) {
+        //   content.push(this.value[i].label)
+        // }
         return [...this.value]
+        // return [...content]
       },
       set(val) {
         this.$emit('input', [...val])
@@ -30,7 +35,6 @@ export default {
   },
   methods: {
     onChange(event) {
-      console.log('fuck')
     },
     setSort() {
       const el = this.$refs.dragSelect.$el.querySelectorAll('.el-select__tags > span')[0]

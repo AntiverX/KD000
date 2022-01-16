@@ -28,43 +28,36 @@
     <el-table
       :key="tableKey"
       v-loading="listLoading"
+      fit
       :data="list"
       border
       highlight-current-row
-      width="200px"
+
       @sort-change="sortChange"
     >
 
       <!-- KD000 : start for 表格代码 -->
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')" width="100px">
+      <el-table-column label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="学期名称" align="center" width="200px">
+      <el-table-column label="班级" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.clazz }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Date" align="center" width="200px">
+      <el-table-column label="教师" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.created | myParseTime }}</span>
+          <span>{{ row.teacher }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="showReviewer" label="Comment" align="center">
+      <el-table-column label="课程" align="center">
         <template slot-scope="{row}">
-          <el-tag v-for="item of value" :key="item" style="margin-right:15px;display: inline-block;white-space: nowrap;word-break: keep-all;">
-            {{ item }}
-          </el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="备注" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.desc }}</span>
+          <span>{{ row.course }}</span>
         </template>
       </el-table-column>
 
@@ -87,12 +80,22 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
-        <el-form-item label="学期名称" prop="name">
-          <el-input v-model="temp.name" />
+        <el-form-item label="班级" prop="clazz">
+          <el-drag-select v-model="temp.clazz" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">
+            <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-drag-select>
         </el-form-item>
 
-        <el-form-item label="备注" prop="comment">
-          <el-input v-model="temp.desc" />
+        <el-form-item label="教师" prop="teacher">
+          <el-drag-select v-model="temp.teacher" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">
+            <el-option v-for="item in teacherOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-drag-select>
+        </el-form-item>
+
+        <el-form-item label="课程" prop="comment">
+          <el-drag-select v-model="temp.course" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">
+            <el-option v-for="item in courseOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-drag-select>
         </el-form-item>
 
       </el-form>
@@ -125,14 +128,13 @@
 <script>
 
 // KD000 : start for 导入API
-import { getCourseList, getCourse, deleteCourse, createCourse, updateCourse } from '@/api/course'
+import { getRuleList, getRule, getTeacherList, getClassList, getCourseList, deleteRule, createRule, updateRule } from '@/api/teachingRules'
 // KD000 : end for 导入API
-import Vue from 'vue'
-import Plugin from 'v-fit-columns'
-Vue.use(Plugin)
+
 import waves from '@/directive/waves' // waves directive
 import { parseTime, myParseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import ElDragSelect from '@/components/DragSelect' // base on element-ui
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -149,7 +151,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, ElDragSelect },
   directives: { waves },
   filters: {
 
@@ -171,7 +173,6 @@ export default {
   },
   data() {
     return {
-      value: ['格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元'],
       tableKey: 0,
       list: null,
       total: 0,
@@ -191,10 +192,9 @@ export default {
       showReviewer: false,
       // KD000 : start for 输入框内容
       temp: {
-        id: undefined,
-        name: '',
-        created: undefined,
-        desc: ''
+        clazz: [],
+        teacher: [],
+        course: []
       },
       // KD000 : start for 输入框内容
       dialogFormVisible: false,
@@ -210,19 +210,103 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      classOptions: [],
+      teacherOptions: [],
+      courseOptions: []
     }
   },
   created() {
     // KD000 : start for 初始化操作
     this.getCurrentCourse()
+    getTeacherList(this.listQuery).then(response => {
+      var teacherOptions = []
+      for (let i = 0; i < response.data.results.length; i++) {
+        var dic = new Array()
+        dic['label'] = response.data.results[i]['name']
+        dic['value'] = response.data.results[i]['id']
+        teacherOptions.push(dic)
+      }
+      this.teacherOptions = teacherOptions
+    })
+    getClassList(this.listQuery).then(response => {
+      var teacherOptions = []
+      for (let i = 0; i < response.data.results.length; i++) {
+        var dic = []
+        dic['label'] = response.data.results[i]['name']
+        dic['value'] = response.data.results[i]['id']
+        teacherOptions.push(dic)
+      }
+      this.classOptions = teacherOptions
+    })
+    getCourseList(this.listQuery).then(response => {
+      var teacherOptions = []
+      for (let i = 0; i < response.data.results.length; i++) {
+        var dic = []
+        dic['label'] = response.data.results[i]['name']
+        dic['value'] = response.data.results[i]['id']
+        teacherOptions.push(dic)
+      }
+      console.log(teacherOptions)
+      this.courseOptions = teacherOptions
+    })
     // KD000 : end for 初始化操作
   },
   methods: {
+    dataFilter(val) {
+      const keywords = val.split(' ')
+      console.log(keywords)
+      var arr = []
+      // eslint-disable-next-line no-empty
+      for (let i = 0; i < this.options.length; i++) {
+        let add
+        add = true
+        for (let j = 0; j < keywords.length; j++) {
+          if (this.options[i].label.indexOf(keywords[j]) === -1) {
+            add = false
+          }
+        }
+        if (add) {
+          arr.push(this.options[i])
+        }
+      }
+      this.options = arr
+    },
+    // KD000 : start for 输入框内容
+    resetTemp() {
+      this.temp = {
+        clazz: [],
+        teacher: [],
+        course: []
+      }
+    },
+    // KD000 : start for 输入框内容
+    resetSelect() {
+      this.options = [{
+        value: '格斗课 - 刘华强',
+        label: '格斗课 - 刘华强'
+      }, {
+        value: '生理课 - 李橙',
+        label: '生理课 - 李橙'
+      },
+      {
+        value: '篮球课 - 王殿元',
+        label: '篮球课 - 王殿元'
+      },
+      {
+        value: '多人运动课 - 李橙',
+        label: '多人运动课 - 李橙'
+      },
+      {
+        value: '多人运动课 - 老板',
+        label: '多人运动课 - 老板'
+      }
+      ]
+    },
 
     // KD000 : start for 使用API
     getCurrentCourse() {
-      getCourseList(this.listQuery).then(response => {
+      getRuleList(this.listQuery).then(response => {
         this.list = response.data.results
         this.total = response.data.count
         this.listLoading = false
@@ -232,8 +316,14 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createCourse(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          var data = {}
+          console.log(this.temp)
+          data['clazz'] = this.temp.clazz[0]
+          data['teacher'] = this.temp.teacher[0]
+          data['course'] = this.temp.course[0]
+          console.log(data)
+          createRule(data).then(() => {
+            // this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -250,7 +340,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          updateCourse(tempData).then(() => {
+          updateRule(tempData).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -266,7 +356,7 @@ export default {
     },
 
     handleDelete(row, index) {
-      deleteCourse(row.id).then(() => {
+      deleteRule(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',
@@ -326,16 +416,6 @@ export default {
       this.handleFilter()
     },
 
-    // KD000 : start for 输入框内容
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        name: '',
-        created: undefined,
-        desc: ''
-      }
-    },
-    // KD000 : start for 输入框内容
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
         this.pvData = response.data.pvData

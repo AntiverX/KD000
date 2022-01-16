@@ -315,6 +315,14 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'teachingRules',
+        component: () => import('@/views/main/scheduler/TechingRules'),
+        name: 'TeachingRules',
+        meta: {
+          title: '教学规则'
+        }
+      },
+      {
         path: 'directive',
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
@@ -322,7 +330,7 @@ export const asyncRoutes = [
           title: '排课'
           // if do not set roles, means: this page does not require permission
         }
-      },
+      }
     ]
   },
 
