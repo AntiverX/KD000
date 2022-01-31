@@ -86,11 +86,11 @@
           </el-drag-select>
         </el-form-item>
 
-        <el-form-item label="教师" prop="teacher">
-          <el-drag-select v-model="temp.teacher" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">
-            <el-option v-for="item in teacherOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-drag-select>
-        </el-form-item>
+<!--        <el-form-item label="教师" prop="teacher">-->
+<!--          <el-drag-select v-model="temp.teacher" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">-->
+<!--            <el-option v-for="item in teacherOptions" :key="item.value" :label="item.label" :value="item.value" />-->
+<!--          </el-drag-select>-->
+<!--        </el-form-item>-->
 
         <el-form-item label="课程" prop="comment">
           <el-drag-select v-model="temp.course" filterable :filter-method="dataFilter" multiple multiple-limit="1" style="width:500px;" placeholder="请选择" @focus="resetSelect">
@@ -128,7 +128,7 @@
 <script>
 
 // KD000 : start for 导入API
-import { getRuleList, getRule, getTeacherList, getClassList, getCourseList, deleteRule, createRule, updateRule } from '@/api/teachingRules'
+import { getRuleList, getClassList, getTeacherCourseList, deleteRule, createRule, updateRule } from '@/api/teachingRules'
 // KD000 : end for 导入API
 
 import waves from '@/directive/waves' // waves directive
@@ -219,16 +219,16 @@ export default {
   created() {
     // KD000 : start for 初始化操作
     this.getCurrentCourse()
-    getTeacherList(this.listQuery).then(response => {
-      var teacherOptions = []
-      for (let i = 0; i < response.data.results.length; i++) {
-        var dic = new Array()
-        dic['label'] = response.data.results[i]['name']
-        dic['value'] = response.data.results[i]['id']
-        teacherOptions.push(dic)
-      }
-      this.teacherOptions = teacherOptions
-    })
+    // getTeacherList(this.listQuery).then(response => {
+    //   var teacherOptions = []
+    //   for (let i = 0; i < response.data.results.length; i++) {
+    //     var dic = new Array()
+    //     dic['label'] = response.data.results[i]['name']
+    //     dic['value'] = response.data.results[i]['id']
+    //     teacherOptions.push(dic)
+    //   }
+    //   this.teacherOptions = teacherOptions
+    // })
     getClassList(this.listQuery).then(response => {
       var teacherOptions = []
       for (let i = 0; i < response.data.results.length; i++) {
@@ -239,11 +239,12 @@ export default {
       }
       this.classOptions = teacherOptions
     })
-    getCourseList(this.listQuery).then(response => {
+    getTeacherCourseList(this.listQuery).then(response => {
       var teacherOptions = []
       for (let i = 0; i < response.data.results.length; i++) {
+        console.log(response.data.results[i])
         var dic = []
-        dic['label'] = response.data.results[i]['name']
+        dic['label'] = response.data.results[i].course.name + ' - ' + response.data.results[i].teacher.name
         dic['value'] = response.data.results[i]['id']
         teacherOptions.push(dic)
       }
@@ -307,7 +308,17 @@ export default {
     // KD000 : start for 使用API
     getCurrentCourse() {
       getRuleList(this.listQuery).then(response => {
-        this.list = response.data.results
+        var results = []
+        for (let i = 0; i < response.data.results.length; i++) {
+          var dict = {}
+          dict['id'] = response.data.results[i].id
+          dict['clazz'] = response.data.results[i].clazz.name
+          dict['teacher'] = response.data.results[i].teacher_course.teacher.name
+          dict['course'] = response.data.results[i].teacher_course.course.name
+          results.push(dict)
+          console.log(response.data.results[i])
+        }
+        this.list = results
         this.total = response.data.count
         this.listLoading = false
       })
@@ -319,8 +330,7 @@ export default {
           var data = {}
           console.log(this.temp)
           data['clazz'] = this.temp.clazz[0]
-          data['teacher'] = this.temp.teacher[0]
-          data['course'] = this.temp.course[0]
+          data['teacher_course'] = this.temp.course[0]
           console.log(data)
           createRule(data).then(() => {
             // this.list.unshift(this.temp)

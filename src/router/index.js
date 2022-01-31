@@ -242,6 +242,15 @@ export const asyncRoutes = [
           title: '教学课程',
           roles: ['admin']
         }
+      },
+      {
+        path: 'teacherCourses',
+        component: () => import('@/views/main/teacher/teacher-course'),
+        name: 'Courses',
+        meta: {
+          title: '教师课程',
+          roles: ['admin']
+        }
       }
 
       // {

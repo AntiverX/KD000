@@ -8,6 +8,16 @@ export function getRuleList(query) {
   })
 }
 
+
+export function getTeachingCOurseList(query) {
+  return request({
+    url: '/api/teachingCourse/',
+    method: 'get',
+    params: query
+  })
+}
+
+
 export function getTeacherList(query) {
   return request({
     url: '/api/teachers/',
@@ -27,6 +37,14 @@ export function getClassList(query) {
 export function getCourseList(query) {
   return request({
     url: '/api/courses/',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getTeacherCourseList(query) {
+  return request({
+    url: '/api/teachingCourse/',
     method: 'get',
     params: query
   })
@@ -54,6 +72,16 @@ export function createRule(data) {
     data
   })
 }
+
+export function createTeachingCourse(data) {
+  return request({
+    url: '/api/teachingCourse/',
+    method: 'post',
+    data
+  })
+}
+createTeachingCourse
+
 export function updateRule(data) {
   return request({
     url: '/api/teachingRules/update',
