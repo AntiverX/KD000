@@ -218,7 +218,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/main/teacher/index'),
+        component: () => import('@/views/main/teacher/teacher'),
         name: 'TeacherInfo',
         meta: {
           title: '教师信息',
@@ -227,22 +227,14 @@ export const asyncRoutes = [
       },
       {
         path: 'TeachPreference',
-        component: () => import('@/views/main/teacher/teacher-preference'),
+        component: () => import('@/views/main/teacher/notAssignTeacher'),
         name: 'TeachPreference',
         meta: {
           title: '教学偏好',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
-      {
-        path: 'courses',
-        component: () => import('@/views/main/course/index'),
-        name: 'Courses',
-        meta: {
-          title: '教学课程',
-          roles: ['admin']
-        }
-      },
+
       {
         path: 'teacherCourses',
         component: () => import('@/views/main/teacher/teacher-course'),
@@ -324,11 +316,36 @@ export const asyncRoutes = [
     },
     children: [
       {
+        path: 'courses',
+        component: () => import('@/views/main/course/index'),
+        name: 'Courses',
+        meta: {
+          title: '教学课程',
+          roles: ['admin']
+        }
+      },
+      {
         path: 'teachingRules',
         component: () => import('@/views/main/scheduler/TechingRules'),
         name: 'TeachingRules',
         meta: {
           title: '教学规则'
+        }
+      },
+      {
+        path: 'linkCourseTime',
+        component: () => import('@/views/main/scheduler/linkCourseTime'),
+        name: 'linkCourseTime',
+        meta: {
+          title: '连堂课'
+        }
+      },
+      {
+        path: 'notAssign',
+        component: () => import('@/views/main/scheduler/notAssign'),
+        name: 'notAssign',
+        meta: {
+          title: '不排课时间'
         }
       },
       {
