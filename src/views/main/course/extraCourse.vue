@@ -36,49 +36,51 @@
     >
 
       <!-- KD000 : start for 表格代码 -->
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')" width="100px">
+      <el-table-column v-if="false" label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="学期名称" align="center" width="200px">
+      <el-table-column v-if="false" label="class ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Date" align="center" width="200px">
+      <el-table-column label="班级" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.created | myParseTime }}</span>
+          <span>{{ row.teaching_rule.clazz.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="showReviewer" label="Comment" align="center">
+      <el-table-column label="课程" align="center">
         <template slot-scope="{row}">
-          <el-tag v-for="item of value" :key="item" style="margin-right:15px;display: inline-block;white-space: nowrap;word-break: keep-all;">
-            {{ item }}
-          </el-tag>
+          <span>{{ row.teaching_rule.teacher_course.course.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" align="center">
+      <el-table-column label="教师" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.desc }}</span>
+          <span>{{ row.teaching_rule.teacher_course.teacher.name }}</span>
         </template>
       </el-table-column>
 
-      <!-- KD000 : end for 表格代码 -->
+      <el-table-column label="额外课程" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.count }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width" width="150px">
 
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">Delete</el-button>
         </template>
 
       </el-table-column>
 
+      <!-- KD000 : end for 表格代码 -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getCurrentCourse" />
@@ -88,14 +90,27 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-row>
-          <el-form-item label="学期名称" prop="name">
-            <el-input v-model="temp.name" />
+          <el-form-item label="教学规则" prop="name">
+            <el-select
+              v-model="temp.teaching_rule"
+              style="width: 280px;"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in AllCourse"
+                :key="item.clazz.name+ ' - ' +item.teacher_course.course.name+ ' - ' + item.teacher_course.teacher.name"
+                :label="item.clazz.name+ ' - ' +item.teacher_course.course.name+ ' - ' + item.teacher_course.teacher.name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-row>
 
-        <el-form-item label="备注" prop="comment">
-          <el-input v-model="temp.desc" />
-        </el-form-item>
+        <el-row>
+          <el-form-item label="额外课程数量" prop="name">
+            <el-input v-model="temp.count" />
+          </el-form-item>
+        </el-row>
 
       </el-form>
 
@@ -104,7 +119,7 @@
         <el-button @click="dialogFormVisible = false">
           Cancel
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button type="primary" @click="createData()">
           Confirm
         </el-button>
       </div>
@@ -127,7 +142,14 @@
 <script>
 
 // KD000 : start for 导入API
-import { getCourseList, getCourse, deleteCourse, createCourse, updateCourse, notAssignCourse } from '@/api/course'
+import {
+  deleteextraCourse,
+  createextraCourse,
+  getextraCourse
+} from '@/api/course'
+import {
+  getRuleList
+} from '@/api/teachingRules'
 // KD000 : end for 导入API
 import Vue from 'vue'
 import Plugin from 'v-fit-columns'
@@ -173,9 +195,11 @@ export default {
   },
   data() {
     return {
+      tempCourse: undefined,
       'weeks': [],
       'sections': [],
       value: ['格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元'],
+      'AllCourse': [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -219,24 +243,50 @@ export default {
   },
   created() {
     // KD000 : start for 初始化操作
+    this.getCourse()
     this.getCurrentCourse()
+    this.initWeeks()
+    this.initSecionts()
     // KD000 : end for 初始化操作
   },
   methods: {
+    initWeeks() {
+      for (var i = 1; i < 8; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.weeks.push(dict)
+      }
+    },
+    initSecionts() {
+      for (var i = 1; i < 14; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.sections.push(dict)
+      }
+    },
     // KD000 : start for 使用API
+    getCourse() {
+      getRuleList(this.listQuery).then(response => {
+        console.log(response.data.results)
+        this.AllCourse = response.data.results
+      })
+    },
     getCurrentCourse() {
-      getCourseList(this.listQuery).then(response => {
+      getextraCourse(this.listQuery).then(response => {
         this.list = response.data.results
         this.total = response.data.count
         this.listLoading = false
       })
     },
-
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createCourse(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          createextraCourse(this.temp).then(response => {
+            this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -249,27 +299,8 @@ export default {
       })
     },
 
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          updateCourse(tempData).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(index, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-
     handleDelete(row, index) {
-      deleteCourse(row.id).then(() => {
+      deleteextraCourse(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',

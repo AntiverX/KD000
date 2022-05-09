@@ -36,49 +36,45 @@
     >
 
       <!-- KD000 : start for 表格代码 -->
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')" width="100px">
+      <el-table-column v-if="false" label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="学期名称" align="center" width="200px">
+      <el-table-column v-if="false" label="class ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.course.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Date" align="center" width="200px">
+      <el-table-column label="课程名称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.created | myParseTime }}</span>
+          <span>{{ row.course.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="showReviewer" label="Comment" align="center">
+      <el-table-column label="不排课周" align="center">
         <template slot-scope="{row}">
-          <el-tag v-for="item of value" :key="item" style="margin-right:15px;display: inline-block;white-space: nowrap;word-break: keep-all;">
-            {{ item }}
-          </el-tag>
+          <span>{{ row.week }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" align="center">
+      <el-table-column label="不排课时段" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.desc }}</span>
+          <span>{{ row.section }}</span>
         </template>
       </el-table-column>
-
-      <!-- KD000 : end for 表格代码 -->
 
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width" width="150px">
 
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">Delete</el-button>
         </template>
 
       </el-table-column>
 
+      <!-- KD000 : end for 表格代码 -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getCurrentCourse" />
@@ -88,15 +84,53 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-row>
-          <el-form-item label="学期名称" prop="name">
-            <el-input v-model="temp.name" />
+          <el-form-item label="课程名称" prop="name">
+            <el-select
+              v-model="temp.course"
+              style="width: 280px;"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in AllCourse"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-row>
 
-        <el-form-item label="备注" prop="comment">
-          <el-input v-model="temp.desc" />
-        </el-form-item>
+        <el-row>
+          <el-form-item label="不排课周" prop="comment">
+            <el-select
+              v-model="temp.week"
+              style="width: 280px;"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in weeks"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-row>
 
+        <el-form-item label="不排课时段" prop="comment">
+          <el-select
+            v-model="temp.section"
+            style="width: 280px;"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in sections"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
 
       <!-- 最下方的取消和确认按钮 -->
@@ -127,7 +161,15 @@
 <script>
 
 // KD000 : start for 导入API
-import { getCourseList, getCourse, deleteCourse, createCourse, updateCourse, notAssignCourse } from '@/api/course'
+import {
+  getCourseList,
+  deletenotAssignCourse,
+  getCourse,
+  createCourse,
+  updateCourse,
+  createnotAssignCourse,
+  getnotAssignCourse
+} from '@/api/course'
 // KD000 : end for 导入API
 import Vue from 'vue'
 import Plugin from 'v-fit-columns'
@@ -173,9 +215,11 @@ export default {
   },
   data() {
     return {
+      tempCourse: undefined,
       'weeks': [],
       'sections': [],
       value: ['格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元'],
+      'AllCourse': [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -219,24 +263,50 @@ export default {
   },
   created() {
     // KD000 : start for 初始化操作
+    this.getCourse()
     this.getCurrentCourse()
+    this.initWeeks()
+    this.initSecionts()
     // KD000 : end for 初始化操作
   },
   methods: {
     // KD000 : start for 使用API
-    getCurrentCourse() {
+    initWeeks() {
+      for (var i = 1; i < 8; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.weeks.push(dict)
+      }
+    },
+    initSecionts() {
+      for (var i = 1; i < 14; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.sections.push(dict)
+      }
+    },
+    getCourse() {
       getCourseList(this.listQuery).then(response => {
+        this.AllCourse = response.data.results
+      })
+    },
+    getCurrentCourse() {
+      getnotAssignCourse(this.listQuery).then(response => {
         this.list = response.data.results
         this.total = response.data.count
         this.listLoading = false
       })
     },
-
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createCourse(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          createnotAssignCourse(this.temp).then(response => {
+            console.log(response.data)
+            this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -248,28 +318,8 @@ export default {
         }
       })
     },
-
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          updateCourse(tempData).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(index, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-
     handleDelete(row, index) {
-      deleteCourse(row.id).then(() => {
+      deletenotAssignCourse(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',
@@ -279,7 +329,6 @@ export default {
         this.list.splice(index, 1)
       })
     },
-
     // KD000 : end for 使用API
 
     handleCreate() {

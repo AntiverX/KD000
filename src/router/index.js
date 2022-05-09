@@ -325,6 +325,42 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'courseTotal',
+        component: () => import('@/views/main/course/courseTotal'),
+        name: 'courseTotal',
+        meta: {
+          title: '课程数量',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'notAssignCourse',
+        component: () => import('@/views/main/course/notAssignCourse'),
+        name: 'notAssignCourse',
+        meta: {
+          title: '固定不排课程',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'Assigned',
+        component: () => import('@/views/main/course/Assigned'),
+        name: 'Assigned',
+        meta: {
+          title: '固定课程',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'extraCourse',
+        component: () => import('@/views/main/course/extraCourse'),
+        name: 'extraCourse',
+        meta: {
+          title: '额外课程',
+          roles: ['admin']
+        }
+      },
+      {
         path: 'teachingRules',
         component: () => import('@/views/main/scheduler/TechingRules'),
         name: 'TeachingRules',
