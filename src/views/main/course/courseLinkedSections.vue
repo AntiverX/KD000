@@ -36,46 +36,33 @@
     >
 
       <!-- KD000 : start for 表格代码 -->
-      <el-table-column v-if="false" label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')" width="100px">
+      <el-table-column v-if="false" label="ID" prop="id" sortable="custom" align="center" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="姓名" align="center" width="200px">
+      <el-table-column label="课程名称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.course.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="年龄" align="center" width="200px">
+      <el-table-column label="课程连堂数量" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.age }}</span>
+          <span>{{ row.linked }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="性别" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.sex == 'm'? '男': '女' }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="工号" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.tid }}</span>
-        </template>
-      </el-table-column>
-      <!-- KD000 : end for 表格代码 -->
 
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width" width="150px">
 
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">Delete</el-button>
         </template>
 
       </el-table-column>
 
+      <!-- KD000 : end for 表格代码 -->
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getCurrentCourse" />
@@ -85,33 +72,28 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
 
         <el-row>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="temp.name" />
+          <el-form-item label="课程" prop="name">
+            <el-select
+              v-model="temp.course"
+              style="width: 280px;"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in AllCourse"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </el-form-item>
         </el-row>
 
-        <el-form-item label="年龄" prop="comment">
-          <el-input v-model="temp.age" />
-        </el-form-item>
+        <el-row>
+          <el-form-item label="课程数量" prop="name">
+            <el-input v-model="temp.total" />
+          </el-form-item>
+        </el-row>
 
-        <el-form-item label="性别" prop="comment">
-          <el-select
-            v-model="temp.sex"
-            style="width: 280px;"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in Sexs"
-              :key="item.label"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="工号" prop="comment">
-          <el-input v-model="temp.tid" />
-        </el-form-item>
       </el-form>
 
       <!-- 最下方的取消和确认按钮 -->
@@ -119,7 +101,7 @@
         <el-button @click="dialogFormVisible = false">
           Cancel
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button type="primary" @click="createData()">
           Confirm
         </el-button>
       </div>
@@ -142,7 +124,12 @@
 <script>
 
 // KD000 : start for 导入API
-import { getteacher, createteacher, deleteteacher, updateteacher } from '@/api/user'
+import {
+  getCourseList,
+  getcourseLinkedSections,
+  createcourseLinkedSections,
+  deletecourseLinkedSections,
+} from '@/api/course'
 // KD000 : end for 导入API
 import Vue from 'vue'
 import Plugin from 'v-fit-columns'
@@ -188,19 +175,11 @@ export default {
   },
   data() {
     return {
-      'Sexs': [
-        {
-          'label': '男',
-          'value': 'm',
-        },
-        {
-          'label': '女',
-          'value': 'f',
-        },
-      ],
+      tempCourse: undefined,
       'weeks': [],
       'sections': [],
       value: ['格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元', '格斗课 - 刘华强', '生理课 - 李橙', '篮球课 - 王殿元'],
+      'AllCourse': [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -244,23 +223,49 @@ export default {
   },
   created() {
     // KD000 : start for 初始化操作
+    this.getCourse()
     this.getCurrentCourse()
+    this.initWeeks()
+    this.initSecionts()
     // KD000 : end for 初始化操作
   },
   methods: {
+    initWeeks() {
+      for (var i = 1; i < 8; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.weeks.push(dict)
+      }
+    },
+    initSecionts() {
+      for (var i = 1; i < 14; i++) {
+        var dict = {
+          'label': i,
+          'value': i
+        }
+        this.sections.push(dict)
+      }
+    },
     // KD000 : start for 使用API
+    getCourse() {
+      getCourseList(this.listQuery).then(response => {
+        console.log(response.data.results)
+        this.AllCourse = response.data.results
+      })
+    },
     getCurrentCourse() {
-      getteacher(this.listQuery).then(response => {
+      getcourseLinkedSections(this.listQuery).then(response => {
         this.list = response.data.results
         this.total = response.data.count
         this.listLoading = false
       })
     },
-
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createteacher(this.temp).then(response => {
+          createcourseLinkedSections(this.temp).then(response => {
             this.list.unshift(response.data)
             this.dialogFormVisible = false
             this.$notify({
@@ -273,28 +278,8 @@ export default {
         }
       })
     },
-
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          // const tempData = Object.assign({}, this.temp)
-          updateteacher(this.temp).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(index, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-
     handleDelete(row, index) {
-      deleteteacher(row.id).then(() => {
+      deletecourseLinkedSections(row.id).then(() => {
         this.$notify({
           title: 'Success',
           message: 'Delete Successfully',
@@ -304,7 +289,6 @@ export default {
         this.list.splice(index, 1)
       })
     },
-
     // KD000 : end for 使用API
 
     handleCreate() {

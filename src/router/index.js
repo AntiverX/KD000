@@ -226,11 +226,11 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'TeachPreference',
+        path: 'notAssignTeacher',
         component: () => import('@/views/main/teacher/notAssignTeacher'),
-        name: 'TeachPreference',
+        name: 'notAssignTeacher',
         meta: {
-          title: '教学偏好',
+          title: '固定不排课教师',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
@@ -330,6 +330,15 @@ export const asyncRoutes = [
         name: 'courseTotal',
         meta: {
           title: '课程数量',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'courseLinkedSections',
+        component: () => import('@/views/main/course/courseLinkedSections'),
+        name: 'courseLinkedSections',
+        meta: {
+          title: '课程连堂数量',
           roles: ['admin']
         }
       },

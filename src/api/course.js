@@ -118,3 +118,63 @@ export function deletecourseTotal(id) {
     method: 'delete'
   })
 }
+// 不排课时间
+export function getnotAssign() {
+  return request({
+    url: '/api/notAssign/',
+    method: 'get'
+  })
+}
+export function createnotAssign(data) {
+  return request({
+    url: '/api/notAssign/',
+    method: 'post',
+    data
+  })
+}
+export function deletenotAssign(id) {
+  return request({
+    url: '/api/notAssign/' + id + '/',
+    method: 'delete'
+  })
+}
+// 连堂课
+export function getlinkCourseTime() {
+  return request({
+    url: '/api/linkCourseTime/',
+    method: 'get'
+  })
+}
+export function createlinkCourseTime(data) {
+  return request({
+    url: '/api/linkCourseTime/',
+    method: 'post',
+    data
+  })
+}
+export function deletelinkCourseTime(id) {
+  return request({
+    url: '/api/linkCourseTime/' + id + '/',
+    method: 'delete'
+  })
+}
+// 课程连堂数量
+export function getcourseLinkedSections() {
+  return request({
+    url: '/api/courseLinkedSections/',
+    method: 'get'
+  })
+}
+export function createcourseLinkedSections(data) {
+  return request({
+    url: '/api/courseLinkedSections/',
+    method: 'post',
+    data
+  })
+}
+export function deletecourseLinkedSections(id) {
+  return request({
+    url: '/api/courseLinkedSections/' + id + '/',
+    method: 'delete'
+  })
+}
