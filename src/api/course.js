@@ -178,3 +178,11 @@ export function deletecourseLinkedSections(id) {
     method: 'delete'
   })
 }
+
+// 获取课表
+export function getGradeScheduler() {
+  return request({
+    url: '/api/do_schedule_task/1',
+    method: 'get'
+  })
+}

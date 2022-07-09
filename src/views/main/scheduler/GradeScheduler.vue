@@ -4,354 +4,83 @@
     <el-table
       :key="tableKey"
       v-loading="listLoading"
-      :data="list"
+      :data="Scheduler"
       border
       fit
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="周一" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column label="年级" align="center" width="80" >
+        <template slot-scope="{row}">
+          <span>{{ row.id }}</span>
+        </template>
       </el-table-column>
 
-      <el-table-column label="周二" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="week_num.indexOf('星期一') !== -1" label="星期一" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.monday[index - 1].id">{{ row.monday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
+
       </el-table-column>
 
-      <el-table-column label="周三" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="week_num.indexOf('星期二') !== -1" label="星期二" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.tuesday[index - 1].id">{{ row.tuesday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
       </el-table-column>
 
-      <el-table-column label="周四" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="week_num.indexOf('星期三') !== -1" label="星期三" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.wednesday[index - 1].id">{{ row.wednesday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
       </el-table-column>
 
-      <el-table-column label="周五" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="week_num.indexOf('星期四') !== -1" label="星期四" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.thursday[index - 1].id">{{ row.thursday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
       </el-table-column>
 
-      <el-table-column label="周六" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column v-if="week_num.indexOf('星期五') !== -1" label="星期五" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.friday[index - 1].id">{{ row.friday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
       </el-table-column>
 
-      <el-table-column label="周日" align="center" width="80">
-        <el-table-column label="1" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="2" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="3" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="4" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="5" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="6" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="7" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="8" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="晚" prop="id" align="center" width="40">
-          <template>
-            <span>语</span>
-          </template>
-        </el-table-column>
+      <el-table-column label="星期六" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.saturday && row.saturday[index - 1].id">{{ row.saturday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
       </el-table-column>
+
+      <el-table-column label="星期日" align="center" width="80">
+        <template v-for="index in class_num">
+          <el-table-column :label="index.toString()" align="center" width="40" >
+            <span slot-scope="{row}" v-if="row.sunday && row.sunday[index - 1].id">{{ row.sunday[index - 1].name[0] }}</span>
+          </el-table-column>
+        </template>
+      </el-table-column>
+
     </el-table>
   </div>
 </template>
 
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import {getCourseList, getGradeScheduler} from '@/api/course'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -427,13 +156,24 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      Scheduler: undefined,
+      class_num: 8,
+      week_num: ['星期一', '星期二', '星期三', '星期四', '星期五']
     }
   },
   created() {
+    // 初始化
     this.getList()
+    this.getScheduler()
   },
   methods: {
+    getScheduler() {
+      getGradeScheduler(this.listQuery).then(response => {
+        console.log(response.data)
+        this.Scheduler = response.data
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
