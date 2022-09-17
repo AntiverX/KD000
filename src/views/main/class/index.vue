@@ -251,7 +251,7 @@
 <script>
 
 // KD000 : start for 定义API
-import { getClazzList, getClazz, deleteClazz, createClazz, updateClazz } from '@/api/clazz'
+import { getClazzList, deleteClazz, createClazz, updateClazz } from '@/api/clazz'
 // KD000 : end for 定义API
 
 import waves from '@/directive/waves' // waves directive
@@ -341,8 +341,9 @@ export default {
     getCurrentClazz() {
       this.listLoading = true
       getClazzList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        console.log(response.data)
+        this.list = response.data.results
+        this.total = response.data.count
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -354,8 +355,6 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
           createClazz(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false

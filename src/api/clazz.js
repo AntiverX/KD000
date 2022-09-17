@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getClazzList(query) {
   return request({
-    url: '/api/clazz/get',
+    url: '/api/classes/',
     method: 'get',
     params: query
   })
@@ -18,7 +18,7 @@ export function getClazz(id) {
 
 export function deleteClazz(id) {
   return request({
-    url: '/api/clazz/delete',
+    url: '/api/classes/delete',
     method: 'get',
     params: { id }
   })
@@ -26,15 +26,7 @@ export function deleteClazz(id) {
 
 export function createClazz(data) {
   return request({
-    url: '/api/clazz/create',
-    method: 'post',
-    data
-  })
-}
-
-export function updateClazz(data) {
-  return request({
-    url: '/api/clazz/update',
+    url: '/api/classes/create',
     method: 'post',
     data
   })
